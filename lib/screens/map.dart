@@ -30,9 +30,9 @@ class MapPage extends StatelessWidget {
         _workshopLongitude = arguments['longitude'];
       }
     }
-//returning a location screen stateful widget
+//returning a location screen statefulwidget
     return SafeArea(
-      minimum: const EdgeInsets.all(2.0),
+      minimum: EdgeInsets.all(2.0),
       child: Scaffold(
         drawer: DrawerNavigation(),
         body: LocationScreen(
