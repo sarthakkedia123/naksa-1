@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:naksa/constants/constant_colors.dart';
 import 'package:naksa/supporter/drawer.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -21,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 textStyle: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xffffffff),
+                  color: bodyWhiteColor,
                 ),
               ),
             ),
@@ -31,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 textStyle: TextStyle(
                   fontSize: 33,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xffffffff),
+                  color: bodyWhiteColor,
                 ),
               ),
             ),

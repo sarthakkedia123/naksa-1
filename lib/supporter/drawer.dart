@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:naksa/constants/constant_colors.dart';
 import 'package:naksa/screens/map.dart';
-import 'package:naksa/screens/home_screen.dart';
 
 class DrawerNavigation extends StatefulWidget {
   @override
@@ -16,7 +16,7 @@ class _DrawerNavigationState extends State<DrawerNavigation> {
         barrierDismissible: true,
         builder: (context) {
           return AlertDialog(
-            backgroundColor: Color(0xff393e46),
+            backgroundColor: bodyBlackColor,
             actions: [
               FlatButton(
                 onPressed: () {
@@ -90,7 +90,7 @@ class _DrawerNavigationState extends State<DrawerNavigation> {
       color: Colors.transparent,
       child: Drawer(
         child: Container(
-          color: Color(0xff393e46),
+          color: bodyBlackColor,
           child: ListView(
             children: [
               UserAccountsDrawerHeader(
@@ -100,7 +100,7 @@ class _DrawerNavigationState extends State<DrawerNavigation> {
                     textStyle: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xffffffff),
+                      color: bodyWhiteColor,
                     ),
                   ),
                 ),
@@ -110,13 +110,13 @@ class _DrawerNavigationState extends State<DrawerNavigation> {
                     textStyle: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xffffffff),
+                      color: bodyWhiteColor,
                     ),
                   ),
                 ),
                 currentAccountPicture: GestureDetector(
                   child: CircleAvatar(
-                    backgroundColor: Color(0xffffffff),
+                    backgroundColor: bodyWhiteColor,
                     child: Icon(
                       Icons.person,
                       color: Colors.grey,
@@ -129,7 +129,7 @@ class _DrawerNavigationState extends State<DrawerNavigation> {
                 thickness: .5,
                 indent: 15,
                 endIndent: 30,
-                color: Color(0xffffffff),
+                color: bodyWhiteColor,
               ),
               ListTile(
                 title: Text(
@@ -139,16 +139,16 @@ class _DrawerNavigationState extends State<DrawerNavigation> {
                       fontSize: 18,
                       letterSpacing: 1,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xffffffff),
+                      color: bodyWhiteColor,
                     ),
                   ),
                 ),
                 leading: Icon(
                   Icons.map,
-                  color: Color(0xffffffff),
+                  color: bodyWhiteColor,
                 ),
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Map()));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>MapPage()));
                 },
               ),
               ListTile(
@@ -159,13 +159,13 @@ class _DrawerNavigationState extends State<DrawerNavigation> {
                       fontSize: 18,
                       letterSpacing: 1,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xffffffff),
+                      color: bodyWhiteColor,
                     ),
                   ),
                 ),
                 leading: Icon(
                   Icons.info,
-                  color: Color(0xffffffff),
+                  color: bodyWhiteColor,
                 ),
                 onTap: () {
                   _showFormInDialog(context);
