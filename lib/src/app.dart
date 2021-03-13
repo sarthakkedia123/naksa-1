@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:naksa/data_provider/appdata.dart';
+import 'package:naksa/screens/distance_matrix_page.dart';
 import 'package:naksa/screens/home_screen.dart';
+import 'package:naksa/screens/map.dart';
+import 'package:naksa/screens/search_places_page.dart';
+import 'package:provider/provider.dart';
 Map<int, Color> color =
 {
   50:Color.fromRGBO(57,62,70,1),
@@ -21,12 +26,22 @@ class App extends StatelessWidget {
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp]
     );
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: colorCustom,
+    return ChangeNotifierProvider(
+      create: (context)=>AppData(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: colorCustom,
+        ),
+        initialRoute:  HomeScreen.id,
+
+        routes: {
+           HomeScreen.id : (context) => HomeScreen(),
+          MapPage.id : (context) => MapPage(),
+          // SearchPlacesPage.id : (context) => SearchPlacesPage(),
+          DistanceMatrixPage.id : (context) => DistanceMatrixPage()
+        },
       ),
-      home: HomeScreen(),
     );
   }
 }

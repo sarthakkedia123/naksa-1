@@ -10,7 +10,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="YOU MUST NEED TO ENTER AN API KEY" />
+            android:value="MAP KEY" />
 
         <activity
             android:name="io.flutter.embedding.android.FlutterActivity"

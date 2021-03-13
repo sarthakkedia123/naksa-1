@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'dart:math';
 
@@ -5,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:naksa/constants/constant_colors.dart';
+import 'package:naksa/screens/home_screen.dart';
 import 'package:naksa/supporter/drawer.dart';
 
 int timesCalled = 0;
@@ -13,33 +15,17 @@ int timesCalled = 0;
 // stateless widget of Map screen that take arguments
 // ignore: must_be_immutable
 class MapPage extends StatelessWidget {
-  bool _createWorkshop = false;
-  bool _workshopDetails = false;
-  String _workshopLatitude = '';
-  String _workshopLongitude = '';
-
+  static const id = 'map_screen';
   @override
 
   Widget build(BuildContext context) {
-    final Map arguments = ModalRoute.of(context).settings.arguments as Map;
-    if (arguments != null) {
-      _createWorkshop = arguments['fromWorkshopCreate'] ?? false;
-      _workshopDetails = arguments['fromWorkshopDetails'] ?? false;
-      if (_workshopDetails) {
-        _workshopLatitude = arguments['latitude'];
-        _workshopLongitude = arguments['longitude'];
-      }
-    }
-//returning a location screen statefulwidget
+
+//returning a location screen stateful widget
     return SafeArea(
       minimum: EdgeInsets.all(2.0),
       child: Scaffold(
         drawer: DrawerNavigation(),
         body: LocationScreen(
-          _createWorkshop,
-          _workshopDetails,
-          _workshopLatitude,
-          _workshopLongitude,
         ),
       ),
     );
@@ -48,17 +34,8 @@ class MapPage extends StatelessWidget {
 // what unique key do? it creates a key that is equal only to itself.
 class LocationScreen extends StatefulWidget {
   final Key _mapKey = UniqueKey();
-  final bool createWorkshop;
-  final bool workshopDetails;
-  final String workshopLatitude;
-  final String workshopLongitude;
-
   LocationScreen(
-    this.createWorkshop,
-    this.workshopDetails,
-    this.workshopLatitude,
-    this.workshopLongitude,
-  ) : super();
+      ) : super();
 
   @override
   _LocationScreenState createState() => _LocationScreenState();
@@ -69,27 +46,15 @@ class _LocationScreenState extends State<LocationScreen> {
   Widget build(BuildContext context) {
     return OurMap(
       key: widget._mapKey,
-      createWorkshop: widget.createWorkshop,
-      workshopDetails: widget.workshopDetails,
-      workshopLatitude: widget.workshopLatitude,
-      workshopLongitude: widget.workshopLongitude,
     );
   }
 }
 
 class OurMap extends StatefulWidget {
-  final bool createWorkshop;
-  final bool workshopDetails;
-  final String workshopLatitude;
-  final String workshopLongitude;
 
   //to avoid crush at hot reload a key is required
   OurMap({
     @required Key key,
-    this.createWorkshop,
-    this.workshopDetails,
-    this.workshopLatitude,
-    this.workshopLongitude,
   }) : super(key: key);
 
   @override
@@ -110,22 +75,13 @@ class _MyAppState extends State<OurMap> {
 
   bool _selectedList = false;
 // initial map position
-  CameraPosition _initialCameraPosition(
-      [String workshopLatitude = '', String workshopLongitude = '']) {
-    print(workshopLatitude);
-    return workshopLatitude == ''
-        ? CameraPosition(
-            target: LatLng(25.267878, 82.990494),
-            zoom: 15,
-            bearing: 0.0,
-            tilt: 0.0,
-          )
-        : CameraPosition(
-            target: LatLng(double.parse(workshopLatitude),
-                double.parse(workshopLongitude)),
-            zoom: 15,
-            tilt: 75,
-            bearing: Random().nextDouble() * 90);
+  CameraPosition _initialCameraPosition() {
+    return CameraPosition(
+      target: LatLng(25.267878, 82.990494),
+      zoom: 15,
+      bearing: 0.0,
+      tilt: 0.0,
+    );
   }
 
   moveCameraToMarker(Map coord) async {
@@ -216,11 +172,11 @@ class _MyAppState extends State<OurMap> {
     }
     _displayMarkers.addAll(_allMarkers);
 
-    if (mounted)
+    // if (mounted)
       setState(() {
         print(_displayMarkers.length);
-        if (widget.createWorkshop && timesCalled == 0) {
-          _settingModalBottomSheet(context);
+        if ( timesCalled == 0) {
+          // _settingModalBottomSheet(context);
           timesCalled += 1;
         }
       });
@@ -228,27 +184,27 @@ class _MyAppState extends State<OurMap> {
 
   void _settingModalBottomSheet(context) {
     final container = (String title, Function setDisplayMarker) => Container(
-          margin: EdgeInsets.all(3),
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: bodyBlackColor,
-          ),
-          child: InkWell(
-            splashColor: Colors.transparent,
-            onTap: () {
-              if (this.mounted)
-                setState(() {
-                  _selectedList = true;
-                  setDisplayMarker();
-                });
-            },
-            child: Text(
-              title,
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        );
+      margin: EdgeInsets.all(3),
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: bodyBlackColor,
+      ),
+      child: InkWell(
+        splashColor: Colors.transparent,
+        onTap: () {
+          // if (this.mounted)
+            setState(() {
+              _selectedList = true;
+              setDisplayMarker();
+            });
+        },
+        child: Text(
+          title,
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+    );
 
     showModalBottomSheet(
       context: context,
@@ -256,7 +212,7 @@ class _MyAppState extends State<OurMap> {
         return Container(
           height: 100,
           decoration: BoxDecoration(
-            color: bodyBlackColor
+              color: bodyBlackColor
           ),
 
           child: Column(
@@ -283,32 +239,6 @@ class _MyAppState extends State<OurMap> {
     );
   }
 
-  static Future<bool> locationSetDialog(
-      BuildContext context, String title, String innerText) async {
-    return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(title ?? '(No Title)'),
-            content: Text(innerText ?? '(No Inner Text)'),
-            actions: <Widget>[
-              FlatButton(
-                child: Text("No"),
-                onPressed: () {
-                  Navigator.of(context).pop(false);
-                  return false;
-                },
-              ),
-              FlatButton(
-                child: Text("Yes"),
-                onPressed: () {
-                  Navigator.of(context).pop(true);
-                },
-              ),
-            ],
-          );
-        });
-  }
 
   @override
   void initState() {
@@ -328,7 +258,6 @@ class _MyAppState extends State<OurMap> {
       appBar: AppBar(
         backgroundColor: bodyBlackColor,
         title: Text(
-          (widget.createWorkshop ? 'Workshop Location-' : '') +
               'IIT BHU MAP',
           style: GoogleFonts.rubik(
             textStyle: TextStyle(
@@ -342,7 +271,10 @@ class _MyAppState extends State<OurMap> {
         centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
+          onPressed: (){
+            Navigator.pop(context);
+          }
+
         ),
         actions: [],
       ),
@@ -359,10 +291,7 @@ class _MyAppState extends State<OurMap> {
         children: [
           GoogleMap(
             onMapCreated: _onMapCreated,
-            initialCameraPosition: widget.workshopDetails
-                ? _initialCameraPosition(
-                    widget.workshopLatitude, widget.workshopLongitude)
-                : _initialCameraPosition(),
+            initialCameraPosition: _initialCameraPosition(),
             mapType: MapType.normal,
             mapToolbarEnabled: true,
             markers: Set.from(_displayMarkers),
@@ -402,90 +331,68 @@ class _MyAppState extends State<OurMap> {
               : Container(),
           _selectedList
               ? Positioned(
-                  top: 5,
-                  left: 10,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: bodyBlackColor,
-                    ),
-                    height: 40,
-                    width: MediaQuery.of(context).size.width - 20,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: _displayMarkers.length,
-                        itemBuilder: (context, index) {
-                          Marker _tappableMarker = _displayMarkers[index];
-                          List<Text> textList = [];
+            top: 5,
+            left: 10,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: bodyBlackColor,
+              ),
+              height: 40,
+              width: MediaQuery.of(context).size.width - 20,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _displayMarkers.length,
+                  itemBuilder: (context, index) {
+                    Marker _tappableMarker = _displayMarkers[index];
+                    List<Text> textList = [];
 
-                          for (var text
-                              in _tappableMarker.infoWindow.title.split(' ')) {
-                            textList.add(Text(text,
-                                style: TextStyle(color: bodyWhiteColor)));
-                          }
+                    for (var text
+                    in _tappableMarker.infoWindow.title.split(' ')) {
+                      textList.add(Text(text,
+                          style: TextStyle(color: bodyWhiteColor)));
+                    }
 
-                          return InkWell(
-                            onTap: () async {
-                              final GoogleMapController controller =
-                                  await mapController.future;
-                              controller.animateCamera(
-                                CameraUpdate.newCameraPosition(
-                                  CameraPosition(
-                                    target: _tappableMarker.position,
-                                    zoom: 18,
-                                    tilt: 75.0,
-                                    bearing: Random().nextDouble() * 90,
-                                  ),
-                                ),
-                              );
-                              if (widget.createWorkshop) {
-                                print(_displayMarkers[index]);
-                                bool shouldLocationBeSet = await locationSetDialog(
-                                    context,
-                                    'Location Set',
-                                    'Do you want to set ${_displayMarkers[index].infoWindow.title} as the location for the workshop/event?');
-                                if (shouldLocationBeSet == true) {
-                                  Navigator.pop(context, [
-                                    _displayMarkers[index]
-                                        .position
-                                        .latitude
-                                        .toStringAsFixed(6),
-                                    _displayMarkers[index]
-                                        .position
-                                        .longitude
-                                        .toStringAsFixed(6),
-                                    _displayMarkers[index]
-                                        .infoWindow
-                                        .title
-                                        .toString(),
-                                  ]);
-                                }
-                              }
-                            },
-                            child: Container(
-                              margin: EdgeInsets.fromLTRB(0, 6, 8, 6),
-                              padding: EdgeInsets.fromLTRB(8, 6, 8, 6),
-                              decoration: BoxDecoration(
-                                color: bodyBlackColor,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Text(
-                                _tappableMarker.infoWindow.title,
-                                style: TextStyle(color: Colors.white)
-                                //  Column(
-                                //   children: textList,
-                                // )
-                                ,
-                              ),
+                    return InkWell(
+                      onTap: () async {
+                        final GoogleMapController controller =
+                        await mapController.future;
+                        controller.animateCamera(
+                          CameraUpdate.newCameraPosition(
+                            CameraPosition(
+                              target: _tappableMarker.position,
+                              zoom: 18,
+                              tilt: 75.0,
+                              bearing: Random().nextDouble() * 90,
                             ),
-                          );
-                        },
+                          ),
+                        );
+
+                      },
+                      child: Container(
+                        margin: EdgeInsets.fromLTRB(0, 6, 8, 6),
+                        padding: EdgeInsets.fromLTRB(8, 6, 8, 6),
+                        decoration: BoxDecoration(
+                          color: bodyBlackColor,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          _tappableMarker.infoWindow.title,
+                          style: TextStyle(color: Colors.white)
+                          //  Column(
+                          //   children: textList,
+                          // )
+                          ,
+                        ),
                       ),
-                    ),
-                  ),
-                )
+                    );
+                  },
+                ),
+              ),
+            ),
+          )
               : Container(),
         ],
       ),
